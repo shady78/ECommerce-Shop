@@ -6,6 +6,8 @@ using API.Errors;
 using API.Helpers;
 using Core.Interfaces;
 using Infrastructure.Data;
+using Infrastructure.Data.Identity;
+using Infrastructure.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
@@ -20,12 +22,15 @@ namespace API.Extensions
             services.AddDbContext<ApplicationDbContext>(
                 opt => opt.UseSqlite(config.GetConnectionString("DefaultConnection")));
 
+           
+
             services.AddSingleton<IConnectionMultiplexer>(c => {
                // var options = ConfigurationOptions.Parse(config.GetConnectionString("Redis"));
                var configuration = ConfigurationOptions.Parse(config.GetConnectionString("Redis"));
                
                 return ConnectionMultiplexer.Connect(configuration);
             });
+            services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IBasketRepository , BasketRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped(typeof(IGenericRepository<>), (typeof(GenericRepository<>)));
