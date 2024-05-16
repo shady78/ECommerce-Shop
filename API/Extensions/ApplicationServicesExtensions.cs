@@ -21,8 +21,10 @@ namespace API.Extensions
                 opt => opt.UseSqlite(config.GetConnectionString("DefaultConnection")));
 
             services.AddSingleton<IConnectionMultiplexer>(c => {
-                var options = ConfigurationOptions.Parse(config.GetConnectionString("Redis"));
-                return ConnectionMultiplexer.Connect(options);
+               // var options = ConfigurationOptions.Parse(config.GetConnectionString("Redis"));
+               var configuration = ConfigurationOptions.Parse(config.GetConnectionString("Redis"));
+               
+                return ConnectionMultiplexer.Connect(configuration);
             });
             services.AddScoped<IBasketRepository , BasketRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
